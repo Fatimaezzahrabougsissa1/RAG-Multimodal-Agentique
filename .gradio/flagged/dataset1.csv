@@ -1,0 +1,39 @@
+query,Synthèse du cours,Images et diagrammes associés extraits du PDF,timestamp
+Qu'est-ce que la partie agentique,"'### Réponse de l'Agent pour : 'Qu'est-ce que la partie agentique'
+
+**Source 1 (Page 15 - TEXT) :**
+> def decouper_texte(texte, taille=60, chevauchement=10):
+    """"""Découper le texte en fragments courts adaptés à CLIP.""""""
+    if not 0 <= chevauchement < taille:
+        raise ValueError(""Le chevauchement doit être inférieur à la taille."")
+    tokens = bpe.encode(texte)
+    for debut in range(0, len(tokens), taille - chevauchement):
+        fragment = bpe.decode(tokens[debut:debut + taille]).strip()
+        if fragment:
+            yield fragment
+        if debut + taille >= len(tokens):
+            break
+RAG Multi Modal
+Découpage du texte en fragments (chunks)
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+def decouper_texte_V2(texte, taille=60, chevauchement=10):
+    """"""Découper le texte en privilégiant les limites naturelles.""""""
+    if not 0 <= chevauchement < taille:
+        raise ValueError(""Le chevauchement doit être inférieur à la taille."")
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=taille,
+        chunk_overlap=chevauchement,
+        length_function=lambda texte: len(bpe.encode(texte)),
+        separators=[""\n\n"", ""\n"", "" "", """"],
+        strip_whitespace=True,
+    )
+    yield from splitter.split_text(texte)
+Une autre façon de faire
+Chunk
+60
+Overlap
+10
+
+**Source 2 (Page 9 - TEXT) :**
+> 4- Partie Agentique
+RAG Multi Modal Agentique",[],2026-10-31 12:21:06.130324
